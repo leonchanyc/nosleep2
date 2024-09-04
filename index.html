@@ -1,33 +1,141 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title>NoSleep.js - Simple Test Page</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-  </head>
-  <body>
-    <h1>NoSleep Test Page</h1>
-    <script src="NoSleep.min.js"></script>
-
-    <input type="button" id="toggle" value="Wake Lock is disabled" />
-
-    <script>
-      var noSleep = new NoSleep();
-
-      var wakeLockEnabled = false;
-      var toggleEl = document.querySelector("#toggle");
-      toggleEl.addEventListener('click', function() {
-        if (!wakeLockEnabled) {
-          noSleep.enable(); // keep the screen on!
-          wakeLockEnabled = true;
-          toggleEl.value = "Wake Lock is enabled";
-          document.body.style.backgroundColor = "green";
-        } else {
-          noSleep.disable(); // let the screen turn off.
-          wakeLockEnabled = false;
-          toggleEl.value = "Wake Lock is disabled";
-          document.body.style.backgroundColor = "";
+    <style>
+        /* Style for the checkbox container */
+        .options-container {
+            font-size: 18px; /* Adjust font size as needed */
+            margin-bottom: 20px;
         }
-      }, false);
+        /* Style for the custom checkboxes */
+        .options-container input[type="checkbox"] {
+            transform: scale(1.5); /* Scale up the checkbox size */
+            margin-right: 10px; /* Space between checkbox and label text */
+        }
+        /* Style for the textarea */
+        #userInput {
+            font-size: 18px; /* Adjust font size as needed */
+            width: 80%; /* Adjust the width as needed */
+            height: 100px; /* Adjust the height as needed */
+            margin-top: 10px;
+        }
+        /* Lighter green background color */
+        .wakeLockOn {
+            background-color: #d0f0c0; /* Light green color */
+        }
+        .wakeLockOff {
+            background-color: ""; /* Default background color */
+        }
+    </style>
+</head>
+<body>
+    <div class="options-container">
+        <h2>This computer needs to stay on because:</h2>
+        <label>
+            <input type="checkbox" name="updateOption" value="Windows update">
+            Running Windows update
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" name="updateOption" value="Lenovo update">
+            Running Lenovo update
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" name="updateOption" value="Teams update">
+            Waiting for the new version of MS Teams to be pushed through
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" name="updateOption" value="Other">
+            Other 
+        </label>
+    </div>
+
+    <textarea id="userInput" placeholder="Type here if you selected 'Other'"></textarea>
+    <br>
+    <input type="button" id="toggle" value="Wake Lock is disabled" />
+	<br>
+	<br>
+    <input type="button" id="reset" value="Reset All" />
+
+    <script src="NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+
+        var wakeLockEnabled = false;
+        var toggleEl = document.querySelector("#toggle");
+        var resetEl = document.querySelector("#reset");
+        var bodyEl = document.querySelector("body");
+        var userInput = document.querySelector("#userInput");
+        var checkboxes = document.querySelectorAll("input[name='updateOption']");
+
+        // Load saved state from localStorage
+        function loadState() {
+            // Load checkbox states
+            checkboxes.forEach(function(checkbox) {
+                checkbox.checked = localStorage.getItem(checkbox.value) === 'true';
+            });
+
+            // Load textarea value
+            userInput.value = localStorage.getItem('userInput') || '';
+        }
+
+        // Save state to localStorage
+        function saveState() {
+            // Save checkbox states
+            checkboxes.forEach(function(checkbox) {
+                localStorage.setItem(checkbox.value, checkbox.checked);
+            });
+
+            // Save textarea value
+            localStorage.setItem('userInput', userInput.value);
+        }
+
+        // Reset state
+        function resetState() {
+            // Clear localStorage
+            localStorage.clear();
+
+            // Reset checkbox states
+            checkboxes.forEach(function(checkbox) {
+                checkbox.checked = false;
+            });
+
+            // Reset textarea value
+            userInput.value = '';
+        }
+
+        // Load state on page load
+        loadState();
+
+        // Add event listeners to save state on change
+        checkboxes.forEach(function(checkbox) {
+            checkbox.addEventListener('change', saveState);
+        });
+        userInput.addEventListener('input', saveState);
+
+        // Handle the Wake Lock button
+        toggleEl.addEventListener('click', function() {
+            if (!wakeLockEnabled) {
+                noSleep.enable(); // keep the screen on!
+                wakeLockEnabled = true;
+                toggleEl.value = "Wake Lock is enabled";
+                bodyEl.classList.add("wakeLockOn");
+                bodyEl.classList.remove("wakeLockOff");
+            } else {
+                noSleep.disable(); // let the screen turn off.
+                wakeLockEnabled = false;
+                toggleEl.value = "Wake Lock is disabled";
+                bodyEl.classList.add("wakeLockOff");
+                bodyEl.classList.remove("wakeLockOn");
+            }
+        }, false);
+
+        // Handle the Reset button
+        resetEl.addEventListener('click', resetState);
     </script>
-  </body>
+</body>
 </html>
