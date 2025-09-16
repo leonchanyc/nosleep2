@@ -32,7 +32,7 @@
 </head>
 <body>
     <div class="options-container">
-        <h2>This computer needs to stay on because:</h2>
+        <!-- <h2>This computer needs to stay on because:</h2> -->
 	    <!-- 
         <label>
             <input type="checkbox" name="updateOption" value="Windows update">
@@ -125,13 +125,13 @@
             if (!wakeLockEnabled) {
                 noSleep.enable(); // keep the screen on!
                 wakeLockEnabled = true;
-                toggleEl.value = "Wake Lock is enabled";
+                toggleEl.value = "No Sleep is enabled";
                 bodyEl.classList.add("wakeLockOn");
                 bodyEl.classList.remove("wakeLockOff");
             } else {
                 noSleep.disable(); // let the screen turn off.
                 wakeLockEnabled = false;
-                toggleEl.value = "Wake Lock is disabled";
+                toggleEl.value = "No Sleep is disabled";
                 bodyEl.classList.add("wakeLockOff");
                 bodyEl.classList.remove("wakeLockOn");
             }
