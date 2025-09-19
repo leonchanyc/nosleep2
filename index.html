@@ -20,54 +20,48 @@
             width: 80%; /* Adjust the width as needed */
             height: 100px; /* Adjust the height as needed */
             margin-top: 10px;
+            background-color: #ffffff; /* Default background */
+            color: #000000; /* Default text color */
+        }
+        /* Style for placeholder in default state */
+        #userInput::placeholder {
+            color: #888888; /* Default placeholder color */
         }
         /* Lighter green background color */
-      .wakeLockOn {
-    background-color: #000000; /* Black color */
-}
-.wakeLockOff {
-    background-color: #ffffff; /* Default to white (or use 'transparent' if preferred) */
-}
+        .wakeLockOn {
+            background-color: #000000; /* Black color for body */
+        }
+        .wakeLockOn #userInput {
+            background-color: #000000; /* Black background for textarea */
+            color: #ffffff; /* White text for textarea */
+        }
+        .wakeLockOn #userInput::placeholder {
+            color: #cccccc; /* Light gray placeholder for visibility */
+        }
+        .wakeLockOff {
+            background-color: #ffffff; /* Default to white for body */
+        }
+        .wakeLockOff #userInput {
+            background-color: #ffffff; /* White background for textarea */
+            color: #000000; /* Black text for textarea */
+        }
+        .wakeLockOff #userInput::placeholder {
+            color: #888888; /* Default placeholder color */
+        }
     </style>
 </head>
-<body>
+<body class="wakeLockOff">
     <div class="options-container">
-        <!-- <h2>This computer needs to stay on because:</h2> -->
-	    <!-- 
-        <label>
-            <input type="checkbox" name="updateOption" value="Windows update">
-            Running Windows / Lenovo update
-        </label>
+        <textarea id="userInput" placeholder=""></textarea>
         <br>
-        <label>
-            <input type="checkbox" name="updateOption" value="Lenovo update">
-            New hire laptop
-        </label>
-        <br>
-        <label>
-            <input type="checkbox" name="updateOption" value="Teams update">
-            Waiting for the new version of MS Teams to be pushed through
-        </label>
-        <br>
-        <label>
-            <input type="checkbox" name="updateOption" value="Other">
-            Other 
-        </label>
+        <input type="button" id="toggle" value="No Sleep is disabled" />
+        <br><br>
+        <input type="button" id="reset" value="Reset All" />
     </div>
-	    -->
-
-	 <textarea id="userInput" placeholder=""></textarea>
-   <!-- <textarea id="userInput" placeholder="Type here if you selected 'Other'"></textarea> -->
-    <br>
-    <input type="button" id="toggle" value="No Sleep is disabled" />
-	<br>
-	<br>
-    <input type="button" id="reset" value="Reset All" />
 
     <script src="NoSleep.min.js"></script>
     <script>
         var noSleep = new NoSleep();
-
         var wakeLockEnabled = false;
         var toggleEl = document.querySelector("#toggle");
         var resetEl = document.querySelector("#reset");
@@ -77,37 +71,26 @@
 
         // Load saved state from localStorage
         function loadState() {
-            // Load checkbox states
             checkboxes.forEach(function(checkbox) {
                 checkbox.checked = localStorage.getItem(checkbox.value) === 'true';
             });
-
-            // Load textarea value
             userInput.value = localStorage.getItem('userInput') || '';
         }
 
         // Save state to localStorage
         function saveState() {
-            // Save checkbox states
             checkboxes.forEach(function(checkbox) {
                 localStorage.setItem(checkbox.value, checkbox.checked);
             });
-
-            // Save textarea value
             localStorage.setItem('userInput', userInput.value);
         }
 
         // Reset state
         function resetState() {
-            // Clear localStorage
             localStorage.clear();
-
-            // Reset checkbox states
             checkboxes.forEach(function(checkbox) {
                 checkbox.checked = false;
             });
-
-            // Reset textarea value
             userInput.value = '';
         }
 
